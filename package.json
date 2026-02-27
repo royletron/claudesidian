@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Bridge Claude Code conversations to your Obsidian vault with /send-to-vault",
   "bin": {
-    "claudesidian": "./install.js"
+    "claudesidian": "./cli.js"
   },
   "files": [
-    "install.js",
+    "cli.js",
     "commands/"
   ],
   "keywords": [
