@@ -1,13 +1,14 @@
 {
   "name": "claudesidian",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Bridge Claude Code conversations to your Obsidian vault with /send-to-vault",
   "bin": {
     "claudesidian": "./cli.js"
   },
   "files": [
     "cli.js",
-    "commands/"
+    "commands/",
+    "README.md"
   ],
   "keywords": [
     "claude",
