@@ -1,0 +1,33 @@
+{
+  "name": "claudesidian",
+  "version": "1.0.0",
+  "description": "Bridge Claude Code conversations to your Obsidian vault with /send-to-vault",
+  "bin": {
+    "claudesidian": "./install.js"
+  },
+  "files": [
+    "install.js",
+    "commands/"
+  ],
+  "keywords": [
+    "claude",
+    "claude-code",
+    "obsidian",
+    "productivity",
+    "notes",
+    "markdown"
+  ],
+  "author": "royletron",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/royletron/claudesidian.git"
+  },
+  "homepage": "https://github.com/royletron/claudesidian#readme",
+  "bugs": {
+    "url": "https://github.com/royletron/claudesidian/issues"
+  }
+}
