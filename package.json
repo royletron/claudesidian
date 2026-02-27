@@ -1,6 +1,6 @@
 {
   "name": "claudesidian",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Bridge Claude Code conversations to your Obsidian vault with /send-to-vault",
   "bin": {
     "claudesidian": "./cli.js"

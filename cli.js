@@ -9,11 +9,45 @@ const HOME = os.homedir();
 const CLAUDE_DIR = path.join(HOME, '.claude');
 const COMMANDS_DIR = path.join(CLAUDE_DIR, 'commands');
 const CONFIG_PATH = path.join(CLAUDE_DIR, 'vault-config.json');
+const SETTINGS_PATH = path.join(CLAUDE_DIR, 'settings.json');
 const COMMAND_SRC = path.join(__dirname, 'commands', 'send-to-vault.md');
 const COMMAND_DEST = path.join(COMMANDS_DIR, 'send-to-vault.md');
 
 function prompt(rl, question) {
   return new Promise(resolve => rl.question(question, resolve));
+}
+
+function applyPermissions(vaultPath) {
+  // Resolve ~ so the glob is an absolute path
+  const resolvedVault = vaultPath.replace(/^~/, HOME);
+  const newRules = [
+    `Write(${resolvedVault}/**)`,
+    `Edit(${resolvedVault}/**)`,
+    `Bash(mkdir -p ${resolvedVault}/*)`,
+    `Read(~/.claude/vault-config.json)`,
+  ];
+
+  let settings = {};
+  if (fs.existsSync(SETTINGS_PATH)) {
+    try {
+      settings = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf8'));
+    } catch {
+      // Malformed — start fresh
+    }
+  }
+
+  if (!settings.permissions) settings.permissions = {};
+  if (!settings.permissions.allow) settings.permissions.allow = [];
+
+  // Remove any stale claudesidian rules (vault path may have changed)
+  const isClaudesidianRule = r =>
+    r.includes('vault-config.json') || r.startsWith(`Write(`) || r.startsWith(`Edit(`) || r.startsWith(`Bash(mkdir`);
+  settings.permissions.allow = settings.permissions.allow.filter(r => !isClaudesidianRule(r));
+
+  settings.permissions.allow.push(...newRules);
+
+  fs.writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2) + '\n');
+  console.log(`✓ Permissions added to ~/.claude/settings.json`);
 }
 
 async function main() {
@@ -64,7 +98,10 @@ async function main() {
 
   fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2) + '\n');
   console.log(`\n✓ Config saved to ~/.claude/vault-config.json`);
-  console.log(`\nAll done! In any Claude conversation, type /send-to-vault\n`);
+
+  applyPermissions(config.vault_path);
+
+  console.log('\nAll done! In any Claude conversation, type /send-to-vault\n');
 }
 
 main().catch(err => {
